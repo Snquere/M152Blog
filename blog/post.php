@@ -36,7 +36,7 @@ require('fonction.php');
 
 					<div class="uk-form-custom uk-float-left">
 					<input type="hidden" name="MAX_FILE_SIZE" value="3000000">
-						<input name="media" type="file">
+						<input name="media" type="file" accept="image/*" multiple>
 						<button class="uk-button uk-button-default" type="button" tabindex="-1"><span uk-icon="camera"></span></button>
 					</div>
 				
