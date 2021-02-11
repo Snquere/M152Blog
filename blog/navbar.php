@@ -3,7 +3,7 @@
 
         <ul class="uk-navbar-nav">
             <li class="uk-active"><a href="#">Logo</a></li>
-            <li><a href="home.php"><span uk-icon="home"></span>Home</a></li>
+            <li><a href="index.php"><span uk-icon="home"></span>Home</a></li>
             <li><a href="post.php"><span uk-icon="plus"></span>Post</a></li>
         </ul>
 

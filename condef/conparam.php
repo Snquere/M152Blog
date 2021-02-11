@@ -7,9 +7,9 @@
  * @brief Connection constants
  */
 
-define('DB_DBNAME', "poste");
+define('DB_DBNAME', "blog");
 define('DB_HOST', "127.0.0.1");
-define('DB_USER', "post");
-define('DB_PASS', "Super");
+define('DB_USER', "blog");
+define('DB_PASS', "Blog2021");
 
 
