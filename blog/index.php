@@ -64,6 +64,7 @@ $allMedia = selectAllMedia();
 						$post = selectPost($idPost);
 						echo'<div>
 							<div class="uk-card uk-card-default">
+							<a href="" uk-icon="cog"></a>
 								<div class="uk-card-media-top">
 									<img src="upload/'.$allMedia[$i]['nomMedia'].'" alt="">
 								</div>
