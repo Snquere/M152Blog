@@ -68,8 +68,7 @@ $allMedia = selectAllMedia();
 									<img src="upload/'.$allMedia[$i]['nomMedia'].'" alt="">
 								</div>
 								<div class="uk-card-body">
-									<h3 class="uk-card-title">Media Top</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+									<p>'.$post[0]['commentaire'].'</p>
 								</div>
 							</div>
 						</div>';

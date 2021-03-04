@@ -6,10 +6,7 @@ require_once 'db/database.php';
 function addMediaBDD($typeMedia, $nomMedia, $idPost){
  
     $bdd = myDatabase();
-    try {
-      $bdd->beginTransaction();
-    } catch (\Throwable $th) {
-    }
+    $bdd->beginTransaction();
     try {
     $req = $bdd->prepare('INSERT INTO media(typeMedia, nomMedia, idPost) VALUES(:typeMedia, :nomMedia, :idPost)');
     $req->execute(array(
@@ -20,12 +17,12 @@ function addMediaBDD($typeMedia, $nomMedia, $idPost){
  
           $resultat = $bdd->lastInsertId();
 
-          return $resultat;
-      
           $bdd->commit();
+          return $resultat;
         } catch (\Throwable $th) {
-             $bdd->rollBack();
-        }
+          $bdd->rollBack();
+     }
+
  }
 
  //Ajoute toute les information du media dans la BDD et son chemain
@@ -41,9 +38,10 @@ function addPostBDD($com){
 
         $resultat = $bdd->lastInsertId();
 
-        return $resultat;
+       
     
         $bdd->commit();
+        return $resultat;
       } catch (\Throwable $th) {
            $bdd->rollBack();
       }
