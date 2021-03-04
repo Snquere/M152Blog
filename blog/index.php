@@ -1,6 +1,7 @@
 <?php
 require('uikit.php');
 require('fonction.php');
+$allMedia = selectAllMedia();
 ?>
 
 <!-- _____________________________HTML____________________________ -->
@@ -55,28 +56,26 @@ require('fonction.php');
 
 					<!-- Post -->
 					<div class="uk-child-width-1-1@m" uk-grid>
-						<div>
+					<?php
+					//Affichage des media selectioner en bdd
+					for ($i = 0; $i < count($allMedia); $i++) 
+					{
+						$idPost = $allMedia[$i]['idPost'];
+						$post = selectPost($idPost);
+						echo'<div>
 							<div class="uk-card uk-card-default">
 								<div class="uk-card-media-top">
-									<img src="img/paysage.jpg" alt="">
+									<img src="upload/'.$allMedia[$i]['nomMedia'].'" alt="">
 								</div>
 								<div class="uk-card-body">
 									<h3 class="uk-card-title">Media Top</h3>
 									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
 								</div>
 							</div>
-						</div>
-						<div>
-							<div class="uk-card uk-card-default">
-								<div class="uk-card-media-top">
-									<img src="img/portrait.jpg" alt="">
-								</div>
-								<div class="uk-card-body">
-									<h3 class="uk-card-title">Media Top</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
-								</div>
-							</div>
-						</div>
+						</div>';
+				   	}
+					?>
+						
 					</div>
 					<!-- /Post -->
 

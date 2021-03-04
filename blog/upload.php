@@ -1,5 +1,9 @@
 <?php
+
+use function PHPSTORM_META\elementType;
+
 require_once('fonction.php');
+$bdd = myDatabase();
 
 //Premiere verification de si le bouton du formulaire a été cliqué
 if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
@@ -54,31 +58,42 @@ if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
           //Verification que le nom de fichier ne soi pas deja present dans le serveur
           //Dans le cas contraire on le modifie avec un nom unique
           for ($i = 0; $i < count($fichiers['name']); $i++) 
-          {
+          {    
+               $idPost = addPostBDD($commentaire);
 
                if (!file_exists("upload/" . $fichiers['name'][$i])) 
                {
-
+                   
+                         //code...
+                    
                     // Affichage d’informations diverses
-                    echo '<p>';
-                    echo 'Fichier ' . $fichiers['name'][$i] . ' reçu';
-                    echo '<br>';
-                    echo 'Type ' . $fichiers['type'][$i];
-                    echo '<br>';
-                    echo 'Taille ' . $fichiers['size'][$i] . ' octets';
+                    // echo '<p>';
+                    // echo 'Fichier ' . $fichiers['name'][$i] . ' reçu';
+                    // echo '<br>';
+                    // echo 'Type ' . $fichiers['type'][$i];
+                    // echo '<br>';
+                    // echo 'Taille ' . $fichiers['size'][$i] . ' octets';
 
                     // Nettoyage du nom de fichier
                     $nom_fichier = preg_replace('/[^a-z0-9\.\-]/ i', '', $fichiers['name'][$i]);
 
                     // Déplacement depuis le répertoire temporaire
-                    move_uploaded_file($fichiers['tmp_name'][$i], $dossier . $nom_fichier);
+                   if(move_uploaded_file($fichiers['tmp_name'][$i], $dossier . $nom_fichier)){
+                     //Envoie des données du fichier a la base de donnée
+                     addMediaBDD($fichiers['type'][$i], $fichiers['name'][$i], $idPost);
+                     header('location:index.php');
+ 
+                   }
+                   else{
+                        echo'Erreur';
+                   }
 
-                    //Envoie des données du fichier a la base de donnée
-                    addMediaBDD($fichiers['type'][$i], $fichiers['name'][$i]);
-               
+                   
+                    
                } 
                else 
                {
+                   
                     //Si il existe on lui donne un nom unique
 
                     // Affichage d’informations diverses
@@ -97,10 +112,17 @@ if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
                     echo uniqid();
 
                     // Déplacement depuis le répertoire temporaire
-                    move_uploaded_file($fichiers['tmp_name'][$i], $dossier . $nom_fichier);
+                    if(move_uploaded_file($fichiers['tmp_name'][$i], $dossier . $nom_fichier)){
+                         //Envoie des données du fichier a la base de donnée
+                         addMediaBDD($fichiers['type'][$i], $fichiers['name'][$i], $idPost);
+                         header('location:index.php');
+                    }
+                    else{
+                         echo'Erreur';
+                    }
 
-                    //Envoie des données du fichier a la base de donnée
-                    addMediaBDD($fichiers['type'][$i], $fichiers['name'][$i]);
+                    
+
                }
           }
           }
