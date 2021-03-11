@@ -31,111 +31,119 @@ if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
                $tailleToutFichier += $fichiers['size'][$i];
                $tailleUnFichier = $fichiers['size'][$i];
 
-               if($tailleToutFichier > $maxValeurToutFichier || $tailleUnFichier > $maxValeurUnFichier){
+               if ($tailleToutFichier > $maxValeurToutFichier || $tailleUnFichier > $maxValeurUnFichier) {
                     $erreurTaille = true;
                }
           }
 
-          if($erreurTaille == false) 
-          {
+          if ($erreurTaille == false) {
 
-          
-          //chemain du dossier ou sauvegarder les fichier
-          $dossier = 'upload/';
 
-          //Verification que les extensions soient celle accpeter
-          for ($i = 0; $i < count($fichiers['name']); $i++) {
-               $type = $fichiers['type'][$i];
-               if (!in_array($type, $allowedExts)) {
-                    echo 'Un de vos fichier n\'est pas pris en compt';
-                    echo '<br>';
-                    echo 'Fichier ' . $fichiers['name'][$i];
-                    exit();
+               //chemain du dossier ou sauvegarder les fichier
+               $dossier = 'upload/';
+
+               //Verification que les extensions soient celle accpeter
+               for ($i = 0; $i < count($fichiers['name']); $i++) {
+                    $type = $fichiers['type'][$i];
+                    if (!in_array($type, $allowedExts)) {
+                         echo 'Un de vos fichier n\'est pas pris en compt';
+                         echo '<br>';
+                         echo 'Fichier ' . $fichiers['name'][$i];
+                         exit();
+                    }
                }
-          }
 
 
-          //Verification que le nom de fichier ne soi pas deja present dans le serveur
-          //Dans le cas contraire on le modifie avec un nom unique
-          for ($i = 0; $i < count($fichiers['name']); $i++) 
-          {    
-               $idPost = addPostBDD($commentaire);
+               //Verification que le nom de fichier ne soi pas deja present dans le serveur
+               //Dans le cas contraire on le modifie avec un nom unique
+               for ($i = 0; $i < count($fichiers['name']); $i++) {
 
-               if (!file_exists("upload/" . $fichiers['name'][$i])) 
-               {
-                   
+
+                    if (!file_exists("upload/" . $fichiers['name'][$i])) {
+
                          //code...
-                    
-                    // Affichage d’informations diverses
-                    // echo '<p>';
-                    // echo 'Fichier ' . $fichiers['name'][$i] . ' reçu';
-                    // echo '<br>';
-                    // echo 'Type ' . $fichiers['type'][$i];
-                    // echo '<br>';
-                    // echo 'Taille ' . $fichiers['size'][$i] . ' octets';
 
-                    // Nettoyage du nom de fichier
-                    $nom_fichier = preg_replace('/[^a-z0-9\.\-]/ i', '', $fichiers['name'][$i]);
+                         // Affichage d’informations diverses
+                         // echo '<p>';
+                         // echo 'Fichier ' . $fichiers['name'][$i] . ' reçu';
+                         // echo '<br>';
+                         // echo 'Type ' . $fichiers['type'][$i];
+                         // echo '<br>';
+                         // echo 'Taille ' . $fichiers['size'][$i] . ' octets';
 
-                    // Déplacement depuis le répertoire temporaire
-                   if(move_uploaded_file($fichiers['tmp_name'][$i], $dossier . $nom_fichier)){
-                     //Envoie des données du fichier a la base de donnée
-                     addMediaBDD($fichiers['type'][$i], $fichiers['name'][$i], $idPost);
-                     header('location:index.php');
- 
-                   }
-                   else{
-                        echo'Erreur';
-                   }
+                         // Nettoyage du nom de fichier
+                         $nom_fichier = preg_replace('/[^a-z0-9\.\-]/ i', '', $fichiers['name'][$i]);
 
-                   
-                    
-               } 
-               else 
-               {
-                   
-                    //Si il existe on lui donne un nom unique
+                         // Déplacement depuis le répertoire temporaire
+                         if (move_uploaded_file($fichiers['tmp_name'][$i], $dossier . $nom_fichier)) {
 
-                    // Affichage d’informations diverses
-                    echo '<p>';
-                    echo 'Fichier ' . $fichiers['name'][$i] . ' reçu';
-                    echo '<br>';
-                    echo 'Type ' . $fichiers['type'][$i];
-                    echo '<br>';
-                    echo 'Taille ' . $fichiers['size'][$i] . ' octets';
+                              $bdd = myDatabase();
+                              //Contrlle que les 2 fonction on reussi
+                              $bdd->beginTransaction();
+                              try {
 
-                    // Nettoyage du nom de fichier
-                    $nom_fichier = preg_replace('/[^a-z0-9\.\-]/ i', '', $fichiers['name'][$i]);
+                                   //Envoie du commentaire dans la base de donnée
+                                   $idPost = addPostBDD($commentaire);
+                                   //Envoie des données du fichier a la base de donnée
+                                   addMediaBDD($fichiers['type'][$i], $fichiers['name'][$i], $idPost);
 
-                    //Donne un nom unique au fichier
-                    $nom_fichier = uniqid().$nom_fichier;
-                    echo uniqid();
+                                   $bdd->commit();
+                              } catch (\Throwable $th) {
+                                   $bdd->rollBack();
+                              }
+                              header('location:index.php');
+                         } else {
+                              echo 'Erreur';
+                         }
+                    } else {
 
-                    // Déplacement depuis le répertoire temporaire
-                    if(move_uploaded_file($fichiers['tmp_name'][$i], $dossier . $nom_fichier)){
-                         //Envoie des données du fichier a la base de donnée
-                         addMediaBDD($fichiers['type'][$i], $fichiers['name'][$i], $idPost);
-                         header('location:index.php');
+                         //Si il existe on lui donne un nom unique
+
+                         // Affichage d’informations diverses
+                         echo '<p>';
+                         echo 'Fichier ' . $fichiers['name'][$i] . ' reçu';
+                         echo '<br>';
+                         echo 'Type ' . $fichiers['type'][$i];
+                         echo '<br>';
+                         echo 'Taille ' . $fichiers['size'][$i] . ' octets';
+
+                         // Nettoyage du nom de fichier
+                         $nom_fichier = preg_replace('/[^a-z0-9\.\-]/ i', '', $fichiers['name'][$i]);
+
+                         //Donne un nom unique au fichier
+                         $nom_fichier = uniqid() . $nom_fichier;
+                         echo uniqid();
+
+                         // Déplacement depuis le répertoire temporaire
+                         if (move_uploaded_file($fichiers['tmp_name'][$i], $dossier . $nom_fichier)) {
+                              $bdd = myDatabase();
+                              //Contrlle que les 2 fonction on reussi
+                              $bdd->beginTransaction();
+                              try {
+
+                                   //Envoie du commentaire dans la base de donnée
+                                   $idPost = addPostBDD($commentaire);
+                                   //Envoie des données du fichier a la base de donnée
+                                   addMediaBDD($fichiers['type'][$i], $fichiers['name'][$i], $idPost);
+
+                                   $bdd->commit();
+                              } catch (\Throwable $th) {
+                                   $bdd->rollBack();
+                              }
+
+                              header('location:index.php');
+                         } else {
+                              echo 'Erreur';
+                         }
                     }
-                    else{
-                         echo'Erreur';
-                    }
-
-                    
-
                }
-          }
-          }
-          else
-          {
+          } else {
                echo 'Vos fichier dépasse la limite autoriser de 70Mo pour l\'ensemble de vos fichier ou 3Mo par fichier';
-               echo '<br>'.$tailleToutFichier;
-               echo '<br>'.$tailleUnFichier;
+               echo '<br>' . $tailleToutFichier;
+               echo '<br>' . $tailleUnFichier;
           }
      }
-} 
-else 
-{
+} else {
      echo 'Desoler il y a eu un probleme';
      //header("location : post.php");
 }
