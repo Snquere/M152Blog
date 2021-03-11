@@ -11,7 +11,7 @@ if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
      $commentaire = filter_input(INPUT_POST, 'commentaire', FILTER_SANITIZE_STRING);
 
      //Les extension de fichier accepter
-     $allowedExts = array("image/png", "image/jpg", "image/jpeg", "image/gif", "video/mp4");
+     $allowedExts = array("image/png", "image/jpg", "image/jpeg", "image/gif", "video/mp4", "audio/mpeg");
 
      if (isset($_FILES) && is_array($_FILES) && count($_FILES) > 0) {
           // Raccourci d'écriture pour le tableau reçu

@@ -74,8 +74,15 @@ $allPost = selectAllPost();
 								$type = $media[$j]['typeMedia'];
 
 								if (preg_match('/video\/*/', $type)) {
+									//Affichage pour les videos
 									echo '<video src="upload/' . $media[$j]['nomMedia'] . '" loop muted controls playsinline uk-video="autoplay: inview"></video>';
+								} else if (preg_match('/audio\/*/', $type)) {
+									//Affichage pour les audios
+									echo '<audio controls>
+									<source src="upload/' . $media[$j]['nomMedia'] . '" type="'.$type.'">
+									</audio>';
 								} else {
+									//Affichage pour les images
 									echo '<img src="upload/' . $media[$j]['nomMedia'] . '" alt="">';
 								}
 							}
