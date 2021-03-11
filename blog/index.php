@@ -1,7 +1,8 @@
 <?php
 require('uikit.php');
 require('fonction.php');
-$allMedia = selectAllMedia();
+$allPost = selectAllPost();
+
 ?>
 
 <!-- _____________________________HTML____________________________ -->
@@ -56,26 +57,37 @@ $allMedia = selectAllMedia();
 
 					<!-- Post -->
 					<div class="uk-child-width-1-1@m" uk-grid>
-					<?php
-					//Affichage des media selectioner en bdd
-					for ($i = 0; $i < count($allMedia); $i++) 
-					{
-						$idPost = $allMedia[$i]['idPost'];
-						$post = selectPost($idPost);
-						echo'<div>
+						<?php
+						//Affichage des media selectioner en bdd
+						for ($i = 0; $i < count($allPost); $i++) {
+							$idPost = $allPost[$i]['idPost'];
+							$media = selectMedia($idPost);
+
+
+
+							echo '<div>
 							<div class="uk-card uk-card-default">
 							<a href="" uk-icon="cog"></a>
-								<div class="uk-card-media-top">
-									<img src="upload/'.$allMedia[$i]['nomMedia'].'" alt="">
-								</div>
+								<div class="uk-card-media-top">';
+							for ($j = 0; $j < count($media); $j++) {
+
+								$type = $media[$j]['typeMedia'];
+
+								if (preg_match('/video\/*/', $type)) {
+									echo '<video src="upload/' . $media[$j]['nomMedia'] . '" loop muted controls playsinline uk-video="autoplay: inview"></video>';
+								} else {
+									echo '<img src="upload/' . $media[$j]['nomMedia'] . '" alt="">';
+								}
+							}
+							echo '</div>
 								<div class="uk-card-body">
-									<p>'.$post[0]['commentaire'].'</p>
+									<p>' . $allPost[$i]['commentaire'] . '</p>
 								</div>
 							</div>
 						</div>';
-				   	}
-					?>
-						
+						}
+						?>
+
 					</div>
 					<!-- /Post -->
 

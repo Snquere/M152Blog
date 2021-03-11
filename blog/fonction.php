@@ -32,11 +32,11 @@ function addPostBDD($com){
 
 }
 
- // Recupere tout les media dans la bdd
- function selectAllMedia(){
+ // Recupere tout les post dans la bdd
+ function selectAllPost(){
 
   $bdd = myDatabase();
-  $req = $bdd->prepare('SELECT * FROM media');
+  $req = $bdd->prepare('SELECT * FROM post ORDER BY creationDate DESC ');
   $req->execute(array(
         ));
 
@@ -46,11 +46,11 @@ function addPostBDD($com){
 
 }
 
-// Recupere les information du post avec l'idPost des medias
-function selectPost($idPost){
+// Recupere les information du media avec l'idPost des post
+function selectMedia($idPost){
 
   $bdd = myDatabase();
-  $req = $bdd->prepare('SELECT * FROM post WHERE idPost = :idPost');
+  $req = $bdd->prepare('SELECT * FROM media WHERE idPost = :idPost');
   $req->execute(array(
     'idPost' => $idPost,
         ));
