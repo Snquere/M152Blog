@@ -60,3 +60,33 @@ function selectMedia($idPost){
         return $resultat;
 
 }
+
+// Supression du post dans la bdd
+function deletePost($idPost){
+
+  $bdd = myDatabase();
+  $req = $bdd->prepare('DELETE FROM post WHERE idPost = :idPost');
+  $req->execute(array(
+    'idPost' => $idPost,
+        ));
+
+        $resultat = $bdd->lastInsertId();
+
+        return $resultat;
+
+}
+
+// Supression des media relié a un post dans la bdd
+function deleteAllMediaPost($idPost){
+
+  $bdd = myDatabase();
+  $req = $bdd->prepare('DELETE FROM media WHERE idPost = :idPost');
+  $req->execute(array(
+    'idPost' => $idPost,
+        ));
+
+        $resultat = $bdd->lastInsertId();
+
+        return $resultat;
+
+}

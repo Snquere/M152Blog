@@ -67,7 +67,8 @@ $allPost = selectAllPost();
 
 							echo '<div>
 							<div class="uk-card uk-card-default">
-							<a href="" uk-icon="cog"></a>
+							<a href="" uk-icon="pencil"></a>
+							<a href="supression.php?idPost='.$idPost.'" uk-icon="trash"></a>
 								<div class="uk-card-media-top">';
 							for ($j = 0; $j < count($media); $j++) {
 
