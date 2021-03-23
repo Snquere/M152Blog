@@ -67,9 +67,10 @@ $allPost = selectAllPost();
 
 							echo '<div>
 							<div class="uk-card uk-card-default">
-							<a href="" uk-icon="pencil"></a>
+							<a href="edit.php?idPost='.$idPost.'" uk-icon="pencil"></a>
 							<a href="supression.php?idPost='.$idPost.'" uk-icon="trash"></a>
 								<div class="uk-card-media-top">';
+								if($media != ''){
 							for ($j = 0; $j < count($media); $j++) {
 
 								$type = $media[$j]['typeMedia'];
@@ -87,6 +88,7 @@ $allPost = selectAllPost();
 									echo '<img src="upload/' . $media[$j]['nomMedia'] . '" alt="">';
 								}
 							}
+						}
 							echo '</div>
 								<div class="uk-card-body">
 									<p>' . $allPost[$i]['commentaire'] . '</p>

@@ -90,3 +90,64 @@ function deleteAllMediaPost($idPost){
         return $resultat;
 
 }
+
+// Recupere les information du post avec l'idPost du post
+function selectPost($idPost){
+
+  $bdd = myDatabase();
+  $req = $bdd->prepare('SELECT * FROM post WHERE idPost = :idPost');
+  $req->execute(array(
+    'idPost' => $idPost,
+        ));
+
+        $resultat = $req->fetchAll();
+
+        return $resultat;
+
+}
+
+// Supression d'un media d'un post dans la bdd
+function deleteMedia($idMedia){
+
+  $bdd = myDatabase();
+  $req = $bdd->prepare('DELETE FROM media WHERE idmedia = :idMedia');
+  $req->execute(array(
+    'idMedia' => $idMedia,
+        ));
+
+        $resultat = $bdd->lastInsertId();
+
+        return $resultat;
+
+}
+
+// Recupere les information du media avec l'idmedia
+function selectOneMedia($idMedia){
+
+  $bdd = myDatabase();
+  $req = $bdd->prepare('SELECT * FROM media WHERE idmedia = :idMedia');
+  $req->execute(array(
+    'idMedia' => $idMedia,
+        ));
+
+        $resultat = $req->fetchAll();
+
+        return $resultat;
+
+}
+
+// Met a jour le commentaire du post
+function updatePost($idPost, $commentaire){
+
+  $bdd = myDatabase();
+  $req = $bdd->prepare('UPDATE post SET commentaire = :commentaire WHERE idPost = :idPost');
+  $req->execute(array(
+    'idPost' => $idPost,
+    'commentaire' => $commentaire,
+        ));
+
+        $resultat = $bdd->lastInsertId();
+
+        return $resultat;
+
+}

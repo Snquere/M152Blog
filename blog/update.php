@@ -1,19 +1,22 @@
 <?php
 
-use function PHPSTORM_META\elementType;
-
 require_once('fonction.php');
 $bdd = myDatabase();
 
 //Premiere verification de si le bouton du formulaire a été cliqué
-if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
+if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Editer') {
+
      //Filtrage de l'envoie du commentaire
      $commentaire = filter_input(INPUT_POST, 'commentaire', FILTER_SANITIZE_STRING);
+
+     //Filtrage de l'envoie de l'idPost
+     $idPost = filter_input(INPUT_POST, 'idPost', FILTER_SANITIZE_STRING);
 
      //Les extension de fichier accepter
      $allowedExts = array("image/png", "image/jpg", "image/jpeg", "image/gif", "video/mp4", "audio/mpeg");
 
-     if (isset($_FILES) && is_array($_FILES) && count($_FILES) > 0) {
+
+     if (isset($_FILES) && is_array($_FILES) && count($_FILES) > 0 && $_FILES['media']['error'][0] != 4) {
           // Raccourci d'écriture pour le tableau reçu
           $fichiers = $_FILES['media'];
 
@@ -57,25 +60,14 @@ if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
                //Contrlle que les 2 fonction on reussi
                $bdd->beginTransaction();
                try {
-                    //Envoie du commentaire dans la base de donnée
-                    $idPost = addPostBDD($commentaire);
+                    //Update du commentaire dans la base de donnée
+                    updatePost($idPost, $commentaire);
 
                     //Verification que le nom de fichier ne soi pas deja present dans le serveur
                     //Dans le cas contraire on le modifie avec un nom unique
                     for ($i = 0; $i < count($fichiers['name']); $i++) {
 
-
                          if (!file_exists("upload/" . $fichiers['name'][$i])) {
-
-                              //code...
-
-                              // Affichage d’informations diverses
-                              // echo '<p>';
-                              // echo 'Fichier ' . $fichiers['name'][$i] . ' reçu';
-                              // echo '<br>';
-                              // echo 'Type ' . $fichiers['type'][$i];
-                              // echo '<br>';
-                              // echo 'Taille ' . $fichiers['size'][$i] . ' octets';
 
                               // Nettoyage du nom de fichier
                               $nom_fichier = preg_replace('/[^a-z0-9\.\-]/ i', '', $fichiers['name'][$i]);
@@ -89,16 +81,6 @@ if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
                                    echo 'Erreur';
                               }
                          } else {
-
-                              //Si il existe on lui donne un nom unique
-
-                              // Affichage d’informations diverses
-                              // echo '<p>';
-                              // echo 'Fichier ' . $fichiers['name'][$i] . ' reçu';
-                              // echo '<br>';
-                              // echo 'Type ' . $fichiers['type'][$i];
-                              // echo '<br>';
-                              // echo 'Taille ' . $fichiers['size'][$i] . ' octets';
 
                               // Nettoyage du nom de fichier
                               $nom_fichier = preg_replace('/[^a-z0-9\.\-]/ i', '', $fichiers['name'][$i]);
@@ -120,7 +102,7 @@ if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
                } catch (\Throwable $th) {
                     $bdd->rollBack();
                }
-               header('location:index.php');
+                header('location:index.php');
           } else {
                echo 'Vos fichier dépasse la limite autoriser de 70Mo pour l\'ensemble de vos fichier ou 3Mo par fichier';
                echo '<br>' . $tailleToutFichier;
@@ -128,7 +110,9 @@ if (filter_input(INPUT_POST, 'envoyer', FILTER_SANITIZE_STRING) == 'Publier') {
           }
      }
      else{
-          echo 'Desoler il faut mettre une image';
+         //Update du commentaire dans la base de donnée
+         updatePost($idPost, $commentaire);
+         header('location:index.php');
      }
 } else {
      echo 'Desoler il y a eu un probleme';
