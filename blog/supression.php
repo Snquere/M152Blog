@@ -26,4 +26,5 @@ $bdd->commit();
 } catch (\Throwable $th) {
      $bdd->rollBack();
 }
-header('location:index.php');
+$allPost = selectAllPost();
+showPost($allPost);

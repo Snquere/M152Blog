@@ -56,46 +56,9 @@ $allPost = selectAllPost();
 					<!-- /Welcome -->
 
 					<!-- Post -->
-					<div class="uk-child-width-1-1@m" uk-grid>
+					<div class="uk-child-width-1-1@m" id="filePost" uk-grid>
 						<?php
-						//Affichage des media selectioner en bdd
-						for ($i = 0; $i < count($allPost); $i++) {
-							$idPost = $allPost[$i]['idPost'];
-							$media = selectMedia($idPost);
-
-
-
-							echo '<div>
-							<div class="uk-card uk-card-default">
-							<a href="edit.php?idPost='.$idPost.'" uk-icon="pencil"></a>
-							<a href="supression.php?idPost='.$idPost.'" uk-icon="trash"></a>
-								<div class="uk-card-media-top">';
-								if($media != ''){
-							for ($j = 0; $j < count($media); $j++) {
-
-								$type = $media[$j]['typeMedia'];
-
-								if (preg_match('/video\/*/', $type)) {
-									//Affichage pour les videos
-									echo '<video src="upload/' . $media[$j]['nomMedia'] . '" loop muted controls playsinline uk-video="autoplay: inview"></video>';
-								} else if (preg_match('/audio\/*/', $type)) {
-									//Affichage pour les audios
-									echo '<audio controls>
-									<source src="upload/' . $media[$j]['nomMedia'] . '" type="'.$type.'">
-									</audio>';
-								} else {
-									//Affichage pour les images
-									echo '<img src="upload/' . $media[$j]['nomMedia'] . '" alt="">';
-								}
-							}
-						}
-							echo '</div>
-								<div class="uk-card-body">
-									<p>' . $allPost[$i]['commentaire'] . '</p>
-								</div>
-							</div>
-						</div>';
-						}
+						showPost($allPost);
 						?>
 
 					</div>
@@ -112,6 +75,20 @@ $allPost = selectAllPost();
 	<!-- /BODY CONTENU -->
 
 	<!-- JS FILES -->
+	<script>
+		function supressionPost(idPost) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("filePost").innerHTML =
+						this.responseText;
+				}
+			};
+			xhttp.open("GET", "supression.php?idPost=" + idPost, true);
+			xhttp.send();
+		}
+	</script>
+
 	<script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script>
 </body>
